@@ -1,7 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
-
 def get_driver():# Set options to make browsing easier for us. 
   options = webdriver.ChromeOptions()
   options.add_argument("disable-infobar")
@@ -14,6 +13,11 @@ def get_driver():# Set options to make browsing easier for us.
   driver = webdriver.Chrome(options=options)
   driver.get("https://automated.pythonanywhere.com/login/")
   return driver 
+
+def clean_text(text):
+  """Extract only the temprature from text"""
+  output = float(text.split(": ")[1])
+  return output
   
 def main():
   driver = get_driver()
@@ -22,7 +26,10 @@ def main():
   driver.find_element(by="id", value="id_password").send_keys("automatedautomated" + Keys.RETURN)
   time.sleep(2)
   driver.find_element(by="xpath", value="/html/body/nav/div/a").click()
-  print(driver.current_url)
+  time.sleep(2)
+  element = driver.find_element(by="xpath", value="/html/body/div[1]/div/h1[2]")
+  return clean_text(element.text)
+  
   
 
 print(main())
